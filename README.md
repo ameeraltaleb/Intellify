@@ -1,4 +1,7 @@
-# Intellify | منصة المعرفة الذكية
+# Intellify - AI Blog Platform 🚀
+
+[![Deployment Status](https://img.shields.io/badge/Vercel-Deployed-success)](https://vercel.com)
+*آخر تحديث: 21 فبراير 2026 - تم إصلاح إعدادات CSS ونظام الحماية*
 
 مشروع مبتكر مبني باستخدام **Next.js 15**, **TypeScript**, و **TailwindCSS**. المشروع يقدم تجربة مستخدم فاخرة مع دعم كامل للغة العربية (RTL).
 
