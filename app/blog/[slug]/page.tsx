@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
         description: article.excerpt?.slice(0, 160),
         openGraph: {
             title: article.title,
-            description: article.article_content?.[0] || article.excerpt,
+            description: article.content?.[0] || article.excerpt,
             type: "article",
             publishedTime: article.created_at,
         },
@@ -39,8 +39,26 @@ export default async function BlogPost({ params }: { params: { slug: string } })
         .filter(a => a.category === article.category && a.slug !== article.slug)
         .slice(0, 3);
 
+    const jsonLd = {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": article.title,
+        "description": article.excerpt,
+        "image": "https://intellify.com/og-image.png", // Placeholder
+        "datePublished": article.created_at,
+        "author": {
+            "@type": "Organization",
+            "name": "Intellify Team",
+            "url": "https://intellify.com"
+        },
+    };
+
     return (
         <div className="bg-white min-h-screen">
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+            />
             <ReadingProgress />
 
             <header className="bg-[#F0F2F5] pt-16 pb-24 border-b border-[#CED0D4]">

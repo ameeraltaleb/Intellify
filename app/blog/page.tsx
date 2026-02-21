@@ -20,7 +20,7 @@ const categoryColors: Record<string, string> = {
 export default async function BlogPage({
     searchParams,
 }: {
-    searchParams: { category?: string };
+    searchParams: { category?: string; search?: string };
 }) {
     const [allArticles, categories] = await Promise.all([
         getArticles(),
@@ -28,9 +28,20 @@ export default async function BlogPage({
     ]);
 
     const activeCategory = searchParams.category;
-    const articles = activeCategory
-        ? allArticles.filter(a => a.category === activeCategory)
-        : allArticles;
+    const searchQuery = searchParams.search?.toLowerCase();
+
+    let articles = allArticles;
+
+    if (activeCategory) {
+        articles = articles.filter(a => a.category === activeCategory);
+    }
+
+    if (searchQuery) {
+        articles = articles.filter(a =>
+            a.title.toLowerCase().includes(searchQuery) ||
+            a.excerpt?.toLowerCase().includes(searchQuery)
+        );
+    }
 
     return (
         <div className="container mx-auto px-4 max-w-[1240px] py-16">
@@ -49,8 +60,8 @@ export default async function BlogPage({
                 <Link
                     href="/blog"
                     className={`px-8 py-3 rounded-2xl font-black text-sm transition-all border-2 ${!activeCategory
-                            ? "bg-[#1877F2] text-white border-[#1877F2] shadow-xl shadow-[#1877F2]/20"
-                            : "bg-white text-[#65676B] border-[#CED0D4] hover:border-[#1877F2]"
+                        ? "bg-[#1877F2] text-white border-[#1877F2] shadow-xl shadow-[#1877F2]/20"
+                        : "bg-white text-[#65676B] border-[#CED0D4] hover:border-[#1877F2]"
                         }`}
                 >
                     الكل ✨
@@ -60,8 +71,8 @@ export default async function BlogPage({
                         key={cat.name}
                         href={`/blog?category=${cat.name}`}
                         className={`px-8 py-3 rounded-2xl font-black text-sm transition-all border-2 ${activeCategory === cat.name
-                                ? "bg-[#1877F2] text-white border-[#1877F2] shadow-xl shadow-[#1877F2]/20"
-                                : "bg-white text-[#65676B] border-[#CED0D4] hover:border-[#1877F2]"
+                            ? "bg-[#1877F2] text-white border-[#1877F2] shadow-xl shadow-[#1877F2]/20"
+                            : "bg-white text-[#65676B] border-[#CED0D4] hover:border-[#1877F2]"
                             }`}
                     >
                         {cat.icon} {cat.name}

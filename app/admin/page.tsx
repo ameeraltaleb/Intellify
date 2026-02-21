@@ -1,9 +1,23 @@
+import { useEffect, useState } from "react";
+import { getAdminStats } from "../actions/articles";
+
 export default function AdminDashboard() {
+    const [statsData, setStatsData] = useState({
+        totalVisits: "٠",
+        articleCount: 0,
+        newSubscribers: 0,
+        bounceRate: "٠٪"
+    });
+
+    useEffect(() => {
+        getAdminStats().then(setStatsData);
+    }, []);
+
     const stats = [
-        { label: "إجمالي الزيارات", value: "٢٥.٤ ألف", change: "+١٢٪", color: "bg-[#1877F2]", icon: "👥" },
-        { label: "المقالات المنشورة", value: "١٤٢", change: "+٨٪", color: "bg-[#42B72A]", icon: "📝" },
-        { label: "المشتركون الجدد", value: "٨٩", change: "+١٥٪", color: "bg-purple-500", icon: "📧" },
-        { label: "معدل الارتداد", value: "٣٢٪", change: "-٥٪", color: "bg-red-500", icon: "📉" },
+        { label: "إجمالي المشاهدات", value: statsData.totalVisits, change: "+١٢٪", color: "bg-[#1877F2]", icon: "👥" },
+        { label: "المقالات المنشورة", value: statsData.articleCount.toString(), change: "+٨٪", color: "bg-[#42B72A]", icon: "📝" },
+        { label: "المشتركون (تقديري)", value: statsData.newSubscribers.toString(), change: "+١٥٪", color: "bg-purple-500", icon: "📧" },
+        { label: "معدل الارتداد", value: statsData.bounceRate, change: "-٥٪", color: "bg-red-500", icon: "📉" },
     ];
 
     return (

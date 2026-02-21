@@ -9,6 +9,7 @@ export default function Navbar() {
     const [isScrolled, setIsScrolled] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
     const pathname = usePathname();
+    const router = useRouter();
 
     useEffect(() => {
         const handleScroll = () => {
@@ -17,6 +18,12 @@ export default function Navbar() {
         window.addEventListener("scroll", handleScroll);
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
+
+    const handleSearch = (e: React.KeyboardEvent) => {
+        if (e.key === "Enter" && searchQuery.trim()) {
+            router.push(`/blog?search=${encodeURIComponent(searchQuery.trim())}`);
+        }
+    };
 
     const navLinks = [
         { name: "الرئيسية", href: "/" },
@@ -50,8 +57,8 @@ export default function Navbar() {
                                 key={link.name}
                                 href={link.href}
                                 className={`px-4 py-2 rounded-lg transition-all text-sm ${pathname === link.href
-                                        ? "text-[#1877F2] bg-[#E7F3FF]"
-                                        : "text-[#65676B] hover:bg-[#F0F2F5] hover:text-[#050505]"
+                                    ? "text-[#1877F2] bg-[#E7F3FF]"
+                                    : "text-[#65676B] hover:bg-[#F0F2F5] hover:text-[#050505]"
                                     }`}
                             >
                                 {link.name}
@@ -67,6 +74,7 @@ export default function Navbar() {
                             className="w-full bg-[#F0F2F5] border-none rounded-full py-2.5 px-12 text-sm focus:ring-2 focus:ring-[#1877F2]/20 transition-all outline-none"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
+                            onKeyDown={handleSearch}
                         />
                         <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[#8A8D91]">🔍</span>
                     </div>
@@ -104,8 +112,8 @@ export default function Navbar() {
                                 key={link.name}
                                 href={link.href}
                                 className={`block p-4 rounded-xl font-bold text-sm ${pathname === link.href
-                                        ? "bg-[#E7F3FF] text-[#1877F2]"
-                                        : "text-[#65676B] hover:bg-[#F0F2F5]"
+                                    ? "bg-[#E7F3FF] text-[#1877F2]"
+                                    : "text-[#65676B] hover:bg-[#F0F2F5]"
                                     }`}
                                 onClick={() => setIsOpen(false)}
                             >

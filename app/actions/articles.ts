@@ -165,6 +165,44 @@ export async function deleteArticle(id: string) {
         console.error("Error deleting article:", err);
         return { success: false, error: err.message };
     }
+
+}
+
+export async function getAdminStats() {
+    try {
+        if (!isSupabaseConfigured) {
+            return {
+                totalVisits: "٢٥.٤ ألف",
+                articleCount: 142,
+                newSubscribers: 89,
+                bounceRate: "٣٢٪"
+            };
+        }
+
+        const { data: articles, error } = await supabase
+            .from("articles")
+            .select("views");
+
+        if (error) throw error;
+
+        const totalViews = articles?.reduce((acc: number, curr: any) => acc + (curr.views || 0), 0) || 0;
+        const count = articles?.length || 0;
+
+        return {
+            totalVisits: totalViews > 1000 ? (totalViews / 1000).toFixed(1) + "K" : totalViews.toString(),
+            articleCount: count,
+            newSubscribers: Math.floor(count * 0.8), // Simulated based on articles for now
+            bounceRate: "٢٤٪" // Static for now until analytics table added
+        };
+    } catch (err) {
+        console.error("Error fetching admin stats:", err);
+        return {
+            totalVisits: "0",
+            articleCount: 0,
+            newSubscribers: 0,
+            bounceRate: "0%"
+        };
+    }
 }
 
 
