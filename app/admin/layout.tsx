@@ -33,9 +33,9 @@ export default function AdminLayout({
                 <nav className="space-y-1.5 flex-1">
                     {[
                         { href: "/admin", label: "الإحصائيات", icon: "📊" },
-                        { href: "/admin/generate-article", label: "توليد مقال", icon: "✍️" },
+                        { href: "/admin/articles", label: "إدارة المقالات", icon: "📁" },
+                        { href: "/admin/generate-article", label: "توليد مقال", icon: "✨" },
                         { href: "/admin/scheduler", label: "جدولة المحتوى", icon: "⏳" },
-                        { href: "/admin/analytics", label: "التحليلات", icon: "📈" },
                         { href: "/admin/settings", label: "الإعدادات", icon: "⚙️" },
                     ].map((item) => {
                         const isActive = pathname === item.href;
@@ -44,8 +44,8 @@ export default function AdminLayout({
                                 key={item.href}
                                 href={item.href}
                                 className={`flex items-center gap-3.5 p-3.5 rounded-xl transition-all font-bold text-sm ${isActive
-                                        ? "bg-[#E7F3FF] text-[#1877F2]"
-                                        : "text-[#65676B] hover:bg-[#F0F2F5]"
+                                    ? "bg-[#E7F3FF] text-[#1877F2]"
+                                    : "text-[#65676B] hover:bg-[#F0F2F5]"
                                     }`}
                             >
                                 <span className="text-lg">{item.icon}</span>
@@ -78,8 +78,9 @@ export default function AdminLayout({
                     <div>
                         <h2 className="text-3xl font-black text-[#050505]">
                             {pathname === "/admin" ? "لوحة التحكم" :
-                                pathname === "/admin/generate-article" ? "توليد محتوى جديد" :
-                                    pathname === "/admin/scheduler" ? "الجدولة الذكية" : "الإعدادات"}
+                                pathname === "/admin/articles" ? "إدارة المقالات" :
+                                    pathname === "/admin/generate-article" ? "توليد محتوى جديد" :
+                                        pathname === "/admin/scheduler" ? "الجدولة الذكية" : "الإعدادات"}
                         </h2>
                         <p className="text-[#65676B] text-sm mt-1">أهلاً بك مجدداً في نظام إدارة المحتوى</p>
                     </div>

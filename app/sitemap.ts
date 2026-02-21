@@ -1,37 +1,39 @@
-import { MetadataRoute } from "next";
+import { MetadataRoute } from 'next';
+import { getArticles } from './actions/articles';
 
-export default function sitemap(): MetadataRoute.Sitemap {
-    const baseUrl = "https://intellify.com";
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+    const baseUrl = 'https://intellify-nu.vercel.app'; // Replace with your actual domain
 
-    const articles = [
-        "ai-revolution-2026",
-        "nextjs-server-components-guide",
-        "machine-learning-basics",
-        "remote-work-productivity",
-        "cybersecurity-tips-2026",
-        "startup-funding-guide",
-        "python-data-analysis",
-        "chatgpt-vs-gemini",
-        "web-design-trends",
-    ];
+    // Get all articles for dynamic URLs
+    const articles = await getArticles();
 
-    const staticPages = [
-        { url: baseUrl, lastModified: new Date(), changeFrequency: "daily" as const, priority: 1 },
-        { url: `${baseUrl}/blog`, lastModified: new Date(), changeFrequency: "daily" as const, priority: 0.9 },
-        { url: `${baseUrl}/tutorials`, lastModified: new Date(), changeFrequency: "weekly" as const, priority: 0.8 },
-        { url: `${baseUrl}/ai-tools`, lastModified: new Date(), changeFrequency: "weekly" as const, priority: 0.8 },
-        { url: `${baseUrl}/about`, lastModified: new Date(), changeFrequency: "monthly" as const, priority: 0.5 },
-        { url: `${baseUrl}/contact`, lastModified: new Date(), changeFrequency: "monthly" as const, priority: 0.5 },
-        { url: `${baseUrl}/privacy`, lastModified: new Date(), changeFrequency: "monthly" as const, priority: 0.3 },
-        { url: `${baseUrl}/terms`, lastModified: new Date(), changeFrequency: "monthly" as const, priority: 0.3 },
-    ];
-
-    const articlePages = articles.map((slug) => ({
-        url: `${baseUrl}/blog/${slug}`,
-        lastModified: new Date(),
-        changeFrequency: "weekly" as const,
+    const articleUrls = articles.map((article) => ({
+        url: `${baseUrl}/blog/${article.slug}`,
+        lastModified: article.created_at || new Date(),
+        changeFrequency: 'weekly' as const,
         priority: 0.7,
     }));
 
-    return [...staticPages, ...articlePages];
+    const staticUrls = [
+        {
+            url: baseUrl,
+            lastModified: new Date(),
+            changeFrequency: 'daily' as const,
+            priority: 1.0,
+        },
+        {
+            url: `${baseUrl}/blog`,
+            lastModified: new Date(),
+            changeFrequency: 'daily' as const,
+            priority: 0.8,
+        },
+        {
+            url: `${baseUrl}/contact`,
+            lastModified: new Date(),
+            changeFrequency: 'monthly' as const,
+            priority: 0.5,
+        },
+    ];
+
+    return [...staticUrls, ...articleUrls];
 }

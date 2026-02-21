@@ -143,3 +143,28 @@ export async function getTrendingArticles() {
     }
 }
 
+export async function deleteArticle(id: string) {
+    try {
+        if (!isSupabaseConfigured) {
+            throw new Error("Supabase is not configured.");
+        }
+
+        const { error } = await supabase
+            .from("articles")
+            .delete()
+            .eq("id", id);
+
+        if (error) throw error;
+
+        revalidatePath("/");
+        revalidatePath("/blog");
+        revalidatePath("/admin/articles");
+
+        return { success: true };
+    } catch (err: any) {
+        console.error("Error deleting article:", err);
+        return { success: false, error: err.message };
+    }
+}
+
+
