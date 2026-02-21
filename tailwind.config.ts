@@ -20,6 +20,10 @@ const config: Config = {
                 "gradient-conic":
                     "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
             },
+            boxShadow: {
+                "fb": "0 2px 12px rgba(0, 0, 0, 0.04)",
+                "reading-bar": "0 0 15px rgba(24, 119, 242, 0.8)",
+            }
         },
     },
     plugins: [],

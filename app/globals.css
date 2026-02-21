@@ -51,7 +51,7 @@ body {
 
 @layer components {
   .fb-card {
-    @apply bg-white rounded-[24px] border border-[#CED0D4] shadow-[0_2px_12px_rgba(0, 0, 0, 0.04)] transition-all duration-300;
+    @apply bg-white rounded-[24px] border border-[#CED0D4] shadow-fb transition-all duration-300;
   }
 
   .fb-btn-primary {
@@ -64,6 +64,14 @@ body {
 
   .fb-input {
     @apply w-full bg-[#F0F2F5] border-2 border-transparent rounded-2xl py-3.5 px-6 focus:bg-white focus:border-[#1877F2] outline-none transition-all text-[#050505] placeholder:text-[#8A8D91] font-bold text-sm;
+  }
+
+  .fb-input-secondary {
+    @apply w-full bg-white border border-[#CED0D4] rounded-xl py-3 px-4 focus:border-[#1877F2] outline-none transition-all text-[#050505] placeholder:text-[#8A8D91] font-bold text-sm;
+  }
+
+  .fb-label {
+    @apply block text-[11px] font-black text-[#65676B] uppercase tracking-wider mb-2 mr-1;
   }
 
   .fb-badge {
@@ -80,7 +88,7 @@ body {
   }
 
   .reading-progress-bar {
-    @apply h-full bg-[#1877F2] transition-all duration-75 ease-out shadow-[0_0_15px_rgba(24, 119, 242, 0.8)];
+    @apply h-full bg-[#1877F2] transition-all duration-75 ease-out shadow-reading-bar;
   }
 
   /* Article Content - Medium Style Typography */
@@ -92,6 +100,10 @@ body {
     @apply mb-10;
   }
 
+  .article-content h1 {
+    @apply text-4xl md:text-5xl font-black mb-12 text-[#050505] leading-tight;
+  }
+
   .article-content h2 {
     @apply text-3xl md:text-4xl font-black mb-10 mt-20 text-[#050505] leading-tight flex items-center gap-5;
   }
@@ -99,6 +111,10 @@ body {
   .article-content h2::before {
     content: "";
     @apply w-2.5 h-12 bg-[#1877F2] rounded-full inline-block;
+  }
+
+  .article-content h3 {
+    @apply text-2xl md:text-3xl font-black mb-8 mt-16 text-[#050505] leading-tight;
   }
 
   .article-content blockquote {
@@ -120,7 +136,7 @@ body {
 }
 
 /* Selection */
-::selection {
+::-selection {
   background: rgba(24, 119, 242, 0.2);
   color: var(--fb-text-primary);
 }
