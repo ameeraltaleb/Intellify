@@ -12,188 +12,110 @@ interface ScheduleItem {
 
 export default function Scheduler() {
     const [schedule, setSchedule] = useState<ScheduleItem[]>([
-        { id: 1, title: "أدوات الذكاء الاصطناعي في ٢٠٢٦", type: "مدونة", time: "غداً ، ١٠:٠٠ ص", status: "مجدول" },
-        { id: 2, title: "دورة Next.js المتقدمة", type: "درس", time: "١٦ فبراير ، ٠٢:٠٠ م", status: "قيد المراجعة" },
-        { id: 3, title: "تحديثات النظام الشهرية", type: "تنبيه", time: "٢٠ فبراير ، ٠٨:٠٠ ص", status: "مجدول" },
+        { id: 1, title: "ChatGPT vs Gemini: مقارنة شاملة لعام 2026", type: "مدونة", time: "غداً ، ١٠:٠٠ ص", status: "مجدول" },
+        { id: 2, title: "دورة Next.js المتقدمة للمحترفين", type: "درس", time: "١٦ فبراير ، ٠٢:٠٠ م", status: "قيد المراجعة" },
+        { id: 3, title: "مستقبل الوظائف في عصر الأتمتة", type: "تنبيه", time: "٢٠ فبراير ، ٠٨:٠٠ ص", status: "مجدول" },
     ]);
 
     const [showForm, setShowForm] = useState(false);
-    const [newTitle, setNewTitle] = useState("");
-    const [newType, setNewType] = useState("مدونة");
-    const [newTime, setNewTime] = useState("");
-
-    const addItem = () => {
-        if (!newTitle.trim() || !newTime.trim()) return;
-        const newItem: ScheduleItem = {
-            id: Date.now(),
-            title: newTitle,
-            type: newType,
-            time: newTime,
-            status: "مجدول",
-        };
-        setSchedule([...schedule, newItem]);
-        setNewTitle("");
-        setNewTime("");
-        setShowForm(false);
-    };
-
-    const deleteItem = (id: number) => {
-        setSchedule(schedule.filter((item) => item.id !== id));
-    };
-
-    const toggleStatus = (id: number) => {
-        setSchedule(
-            schedule.map((item) => {
-                if (item.id !== id) return item;
-                const statusOrder: ScheduleItem["status"][] = ["مجدول", "قيد المراجعة", "منشور"];
-                const currentIdx = statusOrder.indexOf(item.status);
-                const nextStatus = statusOrder[(currentIdx + 1) % statusOrder.length];
-                return { ...item, status: nextStatus };
-            })
-        );
-    };
 
     const statusColors: Record<string, string> = {
-        "مجدول": "text-[#38bdf8] bg-[#38bdf8]/10",
-        "قيد المراجعة": "text-[#fbbf24] bg-[#fbbf24]/10",
-        "منشور": "text-[#4ade80] bg-[#4ade80]/10",
+        "مجدول": "bg-[#E7F3FF] text-[#1877F2]",
+        "قيد المراجعة": "bg-yellow-100 text-yellow-700",
+        "منشور": "bg-green-100 text-green-700",
     };
 
     return (
         <div className="space-y-8">
             <div className="flex justify-between items-center">
-                <h3 className="text-2xl font-bold flex items-center gap-3">
-                    <span className="w-10 h-10 bg-gradient-to-br from-[#fbbf24] to-[#f97316] rounded-xl flex items-center justify-center text-xl">
-                        📅
-                    </span>
-                    جدولة المحتوى
-                </h3>
+                <div>
+                    <h3 className="text-2xl font-black text-[#050505] flex items-center gap-3">
+                        <span className="w-10 h-10 bg-[#FF9D00] text-white rounded-xl flex items-center justify-center text-xl shadow-lg shadow-orange-200">
+                            📅
+                        </span>
+                        الجدولة الذكية للمحتوى
+                    </h3>
+                    <p className="text-[#65676B] text-sm font-bold mt-2">نظّم مواعيد نشر مقالاتك لضمان أفضل وصول للجمهور.</p>
+                </div>
                 <button
                     onClick={() => setShowForm(!showForm)}
-                    className={`px-6 py-3 font-bold rounded-xl text-sm transition-all duration-300 ${showForm
-                            ? "bg-red-500/20 text-red-400 hover:bg-red-500/30"
-                            : "bg-white text-black hover:scale-105"
-                        }`}
+                    className="fb-btn-primary flex items-center gap-2"
                 >
-                    {showForm ? "✕ إلغاء" : "＋ إضافة موعد جديد"}
+                    {showForm ? "✕ إغلاق" : "✨ إضافة موعد جديد"}
                 </button>
             </div>
 
-            {/* Add New Form */}
-            <div
-                className={`overflow-hidden transition-all duration-500 ${showForm ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
-                    }`}
-            >
-                <div className="glass p-6 rounded-2xl border border-white/5 space-y-4">
-                    <input
-                        type="text"
-                        value={newTitle}
-                        onChange={(e) => setNewTitle(e.target.value)}
-                        placeholder="عنوان المحتوى..."
-                        className="w-full bg-white/5 border border-white/10 rounded-xl p-4 focus:border-[#38bdf8] outline-none text-white placeholder:text-white/30"
-                    />
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <select
-                            value={newType}
-                            onChange={(e) => setNewType(e.target.value)}
-                            className="bg-white/5 border border-white/10 rounded-xl p-4 focus:border-[#38bdf8] outline-none text-white"
-                        >
-                            <option value="مدونة">📝 مدونة</option>
-                            <option value="درس">📚 درس</option>
-                            <option value="تنبيه">🔔 تنبيه</option>
-                        </select>
-                        <input
-                            type="text"
-                            value={newTime}
-                            onChange={(e) => setNewTime(e.target.value)}
-                            placeholder="موعد النشر (مثلاً: غداً ١٠ صباحاً)"
-                            className="bg-white/5 border border-white/10 rounded-xl p-4 focus:border-[#38bdf8] outline-none text-white placeholder:text-white/30"
-                        />
+            {showForm && (
+                <div className="fb-card p-8 border-[#1877F2]/20 bg-gradient-to-br from-[#E7F3FF]/30 to-white animate-in slide-in-from-top-4 duration-500">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="md:col-span-2">
+                            <label className="block text-xs font-black text-[#65676B] mb-2 mr-1 uppercase">عنوان المحتوى</label>
+                            <input type="text" className="fb-input" placeholder="اكتب عنوان المقال المخطط له..." />
+                        </div>
+                        <div>
+                            <label className="block text-xs font-black text-[#65676B] mb-2 mr-1 uppercase">نوع المحتوى</label>
+                            <select className="fb-input appearance-none">
+                                <option>مدونة</option>
+                                <option>درس تقني</option>
+                                <option>تنبيه إخباري</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label className="block text-xs font-black text-[#65676B] mb-2 mr-1 uppercase">موعد النشر المقترح</label>
+                            <input type="datetime-local" className="fb-input" />
+                        </div>
                     </div>
-                    <button
-                        onClick={addItem}
-                        disabled={!newTitle.trim() || !newTime.trim()}
-                        className="w-full py-3 bg-[#38bdf8] text-[#0f172a] font-bold rounded-xl hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
-                    >
-                        ✅ إضافة للجدول
-                    </button>
+                    <div className="mt-8 flex justify-end gap-3">
+                        <button className="fb-btn-secondary px-10" onClick={() => setShowForm(false)}>إلغاء</button>
+                        <button className="fb-btn-primary px-10">جدولة المحتوى 🚀</button>
+                    </div>
                 </div>
-            </div>
+            )}
 
-            {/* Schedule Table */}
-            <div className="glass rounded-3xl border border-white/5 overflow-hidden">
-                {schedule.length === 0 ? (
-                    <div className="p-16 text-center text-white/30">
-                        <span className="text-5xl block mb-4">📭</span>
-                        لا توجد محتويات مجدولة حالياً
-                    </div>
-                ) : (
-                    <table className="w-full text-right">
-                        <thead className="bg-white/5">
-                            <tr>
-                                <th className="p-5 text-sm text-white/50">المحتوى</th>
-                                <th className="p-5 text-sm text-white/50">النوع</th>
-                                <th className="p-5 text-sm text-white/50">موعد النشر</th>
-                                <th className="p-5 text-sm text-white/50">الحالة</th>
-                                <th className="p-5 text-sm text-white/50">إجراءات</th>
+            <div className="fb-card overflow-hidden">
+                <table className="w-full text-right border-collapse">
+                    <thead className="bg-[#F0F2F5] border-b border-[#CED0D4]">
+                        <tr>
+                            <th className="px-6 py-4 text-xs font-black text-[#65676B]">المحتوى</th>
+                            <th className="px-6 py-4 text-xs font-black text-[#65676B]">النوع</th>
+                            <th className="px-6 py-4 text-xs font-black text-[#65676B]">موعد النشر</th>
+                            <th className="px-6 py-4 text-xs font-black text-[#65676B]">الحالة</th>
+                            <th className="px-6 py-4 text-xs font-black text-[#65676B]">التحكم</th>
+                        </tr>
+                    </thead>
+                    <tbody className="divide-y divide-[#F0F2F5]">
+                        {schedule.map((item) => (
+                            <tr key={item.id} className="hover:bg-[#F0F2F5]/30 transition-colors group">
+                                <td className="px-6 py-6 font-bold text-[#050505]">{item.title}</td>
+                                <td className="px-6 py-6 font-bold text-xs text-[#65676B]">{item.type}</td>
+                                <td className="px-6 py-6 text-sm text-[#8A8D91] font-medium">{item.time}</td>
+                                <td className="px-6 py-6">
+                                    <span className={`px-3 py-1 rounded-lg text-[11px] font-black ${statusColors[item.status]}`}>
+                                        {item.status}
+                                    </span>
+                                </td>
+                                <td className="px-6 py-6">
+                                    <button className="text-red-600 font-black text-xs hover:underline">حذف</button>
+                                </td>
                             </tr>
-                        </thead>
-                        <tbody className="divide-y divide-white/5">
-                            {schedule.map((item) => (
-                                <tr
-                                    key={item.id}
-                                    className="hover:bg-white/5 transition-colors group"
-                                >
-                                    <td className="p-5 font-bold">{item.title}</td>
-                                    <td className="p-5">
-                                        <span className="px-3 py-1 bg-white/10 rounded-full text-xs">
-                                            {item.type}
-                                        </span>
-                                    </td>
-                                    <td className="p-5 text-white/60">{item.time}</td>
-                                    <td className="p-5">
-                                        <button
-                                            onClick={() => toggleStatus(item.id)}
-                                            className={`px-3 py-1 rounded-full text-xs font-bold cursor-pointer transition-all hover:scale-105 ${statusColors[item.status]}`}
-                                        >
-                                            {item.status}
-                                        </button>
-                                    </td>
-                                    <td className="p-5">
-                                        <button
-                                            onClick={() => deleteItem(item.id)}
-                                            className="text-red-400/70 hover:text-red-400 transition-colors text-sm"
-                                        >
-                                            🗑️ حذف
-                                        </button>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                )}
+                        ))}
+                    </tbody>
+                </table>
             </div>
 
-            {/* Summary */}
-            <div className="grid grid-cols-3 gap-4">
-                <div className="glass p-4 rounded-2xl text-center border border-white/5">
-                    <p className="text-2xl font-black text-[#38bdf8]">
-                        {schedule.filter((s) => s.status === "مجدول").length}
-                    </p>
-                    <p className="text-xs text-white/40 mt-1">مجدول</p>
-                </div>
-                <div className="glass p-4 rounded-2xl text-center border border-white/5">
-                    <p className="text-2xl font-black text-[#fbbf24]">
-                        {schedule.filter((s) => s.status === "قيد المراجعة").length}
-                    </p>
-                    <p className="text-xs text-white/40 mt-1">قيد المراجعة</p>
-                </div>
-                <div className="glass p-4 rounded-2xl text-center border border-white/5">
-                    <p className="text-2xl font-black text-[#4ade80]">
-                        {schedule.filter((s) => s.status === "منشور").length}
-                    </p>
-                    <p className="text-xs text-white/40 mt-1">منشور</p>
-                </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {[
+                    { label: "مجدول", count: 12, color: "text-[#1877F2]", bg: "bg-[#E7F3FF]" },
+                    { label: "بانتظار المراجعة", count: 5, color: "text-yellow-600", bg: "bg-yellow-100" },
+                    { label: "نُشر مؤخراً", count: 48, color: "text-green-600", bg: "bg-green-100" },
+                ].map((stat, i) => (
+                    <div key={i} className="fb-card p-6 flex flex-col items-center justify-center text-center">
+                        <div className={`w-12 h-12 ${stat.bg} ${stat.color} rounded-full flex items-center justify-center text-xl font-black mb-4 shadow-inner`}>
+                            {stat.count}
+                        </div>
+                        <p className="text-xs font-black text-[#65676B] uppercase">{stat.label}</p>
+                    </div>
+                ))}
             </div>
         </div>
     );

@@ -1,98 +1,36 @@
-import type { Metadata } from "next";
-
-export const metadata: Metadata = {
-    title: "سياسة الخصوصية | Intellify",
-    description: "سياسة الخصوصية لموقع Intellify وكيفية التعامل مع بياناتك الشخصية.",
-};
-
-export default function PrivacyPolicyPage() {
+export default function PrivacyPage() {
     return (
-        <div className="container mx-auto px-4 md:px-6 py-8">
-            <article className="max-w-4xl mx-auto">
-                <h1 className="text-3xl md:text-4xl font-black mb-8">
-                    <span className="text-gradient">سياسة الخصوصية</span>
-                </h1>
-                <p className="text-white/40 text-sm mb-8">آخر تحديث: 21 فبراير 2026</p>
+        <div className="container mx-auto px-4 max-w-[800px] py-20">
+            <div className="fb-card p-10 md:p-16">
+                <h1 className="text-3xl font-black text-[#050505] mb-10 pb-6 border-b border-[#F0F2F5]">سياسة الخصوصية</h1>
 
-                <div className="glass rounded-3xl p-8 md:p-12 border border-white/5 space-y-8 text-white/80 leading-loose">
-                    <section>
-                        <h2 className="text-xl font-bold text-white mb-3">1. مقدمة</h2>
-                        <p>
-                            نحن في Intellify نقدر خصوصيتك ونلتزم بحماية بياناتك الشخصية. توضح سياسة الخصوصية
-                            هذه كيفية جمعنا واستخدامنا وحمايتنا لمعلوماتك عند زيارة موقعنا الإلكتروني.
-                            باستخدامك لموقعنا، فإنك توافق على الشروط الواردة في هذه السياسة.
-                        </p>
-                    </section>
+                <div className="article-content">
+                    <p>في Intellify، نلتزم بحماية خصوصيتك ومعلوماتك الشخصية. توضح هذه السياسة طبيعة المعلومات التي نجمعها وكيفية معالجتها.</p>
 
-                    <section>
-                        <h2 className="text-xl font-bold text-white mb-3">2. المعلومات التي نجمعها</h2>
-                        <p className="mb-3">قد نجمع الأنواع التالية من المعلومات:</p>
-                        <ul className="space-y-2 mr-4">
-                            <li className="flex items-start gap-2"><span className="text-[#38bdf8]">•</span> <strong className="text-white">معلومات شخصية:</strong> مثل الاسم والبريد الإلكتروني عند التسجيل في النشرة البريدية أو التواصل معنا.</li>
-                            <li className="flex items-start gap-2"><span className="text-[#38bdf8]">•</span> <strong className="text-white">بيانات التصفح:</strong> مثل عنوان IP، نوع المتصفح، الصفحات التي تزورها، ومدة الزيارة.</li>
-                            <li className="flex items-start gap-2"><span className="text-[#38bdf8]">•</span> <strong className="text-white">ملفات تعريف الارتباط (Cookies):</strong> نستخدم ملفات تعريف الارتباط لتحسين تجربة التصفح.</li>
-                        </ul>
-                    </section>
+                    <h2 className="text-2xl font-black mt-12 mb-6">المعلومات التي نجمعها</h2>
+                    <p>نقوم بجمع معلومات بسيطة عند استخدامك للموقع، مثل:</p>
+                    <ul className="list-disc pr-6 space-y-2 text-[#65676B] font-medium">
+                        <li>عنوان البريد الإلكتروني عند الاشتراك في النشرة البريدية.</li>
+                        <li>بيانات التصفح لغرض تحسين تجربة المستخدم وتحليل الأداء.</li>
+                        <li>المعلومات التي تقدمها طواعية عند التواصل معنا عبر النماذج المخصصة.</li>
+                    </ul>
 
-                    <section>
-                        <h2 className="text-xl font-bold text-white mb-3">3. كيف نستخدم معلوماتك</h2>
-                        <ul className="space-y-2 mr-4">
-                            <li className="flex items-start gap-2"><span className="text-[#818cf8]">•</span> تقديم المحتوى والخدمات المطلوبة</li>
-                            <li className="flex items-start gap-2"><span className="text-[#818cf8]">•</span> إرسال النشرات البريدية والتحديثات (بموافقتك)</li>
-                            <li className="flex items-start gap-2"><span className="text-[#818cf8]">•</span> تحسين وتطوير محتوى الموقع</li>
-                            <li className="flex items-start gap-2"><span className="text-[#818cf8]">•</span> تحليل أنماط الاستخدام لتحسين تجربة المستخدم</li>
-                            <li className="flex items-start gap-2"><span className="text-[#818cf8]">•</span> عرض إعلانات مخصصة عبر شركاء الإعلان (مثل Google AdSense)</li>
-                        </ul>
-                    </section>
+                    <h2 className="text-2xl font-black mt-12 mb-6">كيفية استخدام المعلومات</h2>
+                    <p>نستخدم هذه البيانات من أجل:</p>
+                    <ul className="list-disc pr-6 space-y-2 text-[#65676B] font-medium">
+                        <li>إرسال تحديثات المدونة والمحتوى الجديد (إذا كنت مشتركاً).</li>
+                        <li>تحسين واجهة الموقع وتقديم محتوى أكثر صلة باهتماماتك.</li>
+                        <li>الرد على استفساراتك وتقديم الدعم الفني.</li>
+                    </ul>
 
-                    <section>
-                        <h2 className="text-xl font-bold text-white mb-3">4. ملفات تعريف الارتباط (Cookies)</h2>
-                        <p>
-                            يستخدم موقعنا ملفات تعريف الارتباط لتخزين تفضيلاتك وتحسين تجربتك. كما يستخدم
-                            شركاء الإعلان لدينا (مثل Google) ملفات تعريف الارتباط لعرض إعلانات بناءً على
-                            زياراتك السابقة. يمكنك التحكم في إعدادات ملفات تعريف الارتباط من خلال متصفحك.
-                        </p>
-                    </section>
-
-                    <section>
-                        <h2 className="text-xl font-bold text-white mb-3">5. الإعلانات</h2>
-                        <p>
-                            نستخدم خدمة Google AdSense لعرض الإعلانات على موقعنا. تستخدم Google وشركاؤها
-                            ملفات تعريف الارتباط لعرض إعلانات بناءً على زيارات المستخدم السابقة لموقعنا أو
-                            مواقع أخرى. يمكنك إلغاء الاشتراك في الإعلانات المخصصة بزيارة{" "}
-                            <a href="https://www.google.com/settings/ads" className="text-[#38bdf8] hover:underline" target="_blank" rel="noopener noreferrer">
-                                إعدادات إعلانات Google
-                            </a>.
-                        </p>
-                    </section>
-
-                    <section>
-                        <h2 className="text-xl font-bold text-white mb-3">6. حماية البيانات</h2>
-                        <p>
-                            نتخذ إجراءات أمنية مناسبة لحماية معلوماتك الشخصية من الوصول غير المصرح به أو
-                            التعديل أو الإفصاح. ومع ذلك، لا يمكن ضمان أمان نقل البيانات عبر الإنترنت بنسبة 100%.
-                        </p>
-                    </section>
-
-                    <section>
-                        <h2 className="text-xl font-bold text-white mb-3">7. حقوقك</h2>
-                        <ul className="space-y-2 mr-4">
-                            <li className="flex items-start gap-2"><span className="text-[#4ade80]">•</span> الحق في الوصول إلى بياناتك الشخصية</li>
-                            <li className="flex items-start gap-2"><span className="text-[#4ade80]">•</span> الحق في تصحيح البيانات غير الدقيقة</li>
-                            <li className="flex items-start gap-2"><span className="text-[#4ade80]">•</span> الحق في حذف بياناتك</li>
-                            <li className="flex items-start gap-2"><span className="text-[#4ade80]">•</span> الحق في إلغاء الاشتراك في النشرة البريدية في أي وقت</li>
-                        </ul>
-                    </section>
-
-                    <section>
-                        <h2 className="text-xl font-bold text-white mb-3">8. تواصل معنا</h2>
-                        <p>
-                            إذا كانت لديك أي أسئلة حول سياسة الخصوصية هذه، يرجى التواصل معنا عبر
-                            البريد الإلكتروني: <span className="text-[#38bdf8]">privacy@intellify.com</span>
-                        </p>
-                    </section>
+                    <h2 className="text-2xl font-black mt-12 mb-6">ملفات التعريف (Cookies)</h2>
+                    <p>نستخدم الكوكيز لتعزيز تجربة التصفح وحفظ تفضيلاتك. يمكنك إيقاف تشغيل الكوكيز من إعدادات المتصفح الخاص بك في أي وقت.</p>
                 </div>
-            </article>
+
+                <div className="mt-16 pt-10 border-t border-[#F0F2F5] text-xs font-bold text-[#8A8D91]">
+                    آخر تحديث: 21 فبراير 2026
+                </div>
+            </div>
         </div>
     );
 }

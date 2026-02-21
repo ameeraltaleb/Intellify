@@ -1,114 +1,121 @@
 "use client";
 
 import { useState } from "react";
-import type { Metadata } from "next";
 
 export default function ContactPage() {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
-    const [subject, setSubject] = useState("");
     const [message, setMessage] = useState("");
     const [sent, setSent] = useState(false);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        // Simulate sending
         setSent(true);
         setName("");
         setEmail("");
-        setSubject("");
         setMessage("");
         setTimeout(() => setSent(false), 5000);
     };
 
     return (
-        <div className="container mx-auto px-4 md:px-6 py-8">
-            <div className="max-w-4xl mx-auto">
-                <h1 className="text-3xl md:text-4xl font-black mb-8">
-                    <span className="text-gradient">اتصل بنا</span>
-                </h1>
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    {/* Contact Info */}
-                    <div className="space-y-4">
-                        <div className="glass rounded-2xl p-6 border border-white/5">
-                            <div className="text-2xl mb-2">📧</div>
-                            <h3 className="font-bold text-white mb-1">البريد الإلكتروني</h3>
-                            <p className="text-white/50 text-sm">contact@intellify.com</p>
-                        </div>
-                        <div className="glass rounded-2xl p-6 border border-white/5">
-                            <div className="text-2xl mb-2">🕐</div>
-                            <h3 className="font-bold text-white mb-1">ساعات العمل</h3>
-                            <p className="text-white/50 text-sm">الأحد - الخميس: 9ص - 6م</p>
-                        </div>
-                        <div className="glass rounded-2xl p-6 border border-white/5">
-                            <div className="text-2xl mb-2">📍</div>
-                            <h3 className="font-bold text-white mb-1">الموقع</h3>
-                            <p className="text-white/50 text-sm">الشرق الأوسط - عن بُعد</p>
-                        </div>
+        <div className="container mx-auto px-4 max-w-[1000px] py-16">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
+                {/* Contact Info */}
+                <div className="lg:col-span-5 space-y-8">
+                    <div>
+                        <h1 className="text-4xl md:text-5xl font-black text-[#050505] mb-6">اتصل <span className="text-[#1877F2]">بنا</span></h1>
+                        <p className="text-[#65676B] text-lg font-medium leading-relaxed">نحن هنا للإجابة على تساؤلاتك واستقبال اقتراحاتك لتطوير المنصة.</p>
                     </div>
 
-                    {/* Contact Form */}
-                    <div className="md:col-span-2">
-                        <form onSubmit={handleSubmit} className="glass rounded-3xl p-8 border border-white/5 space-y-5">
-                            {sent && (
-                                <div className="p-4 bg-green-500/20 border border-green-500/30 rounded-xl text-green-300 text-sm">
-                                    ✅ تم إرسال رسالتك بنجاح! سنتواصل معك قريباً.
+                    <div className="space-y-4 pt-10">
+                        {[
+                            { title: "البريد الإلكتروني", value: "contact@intellify.com", icon: "📧", sub: "نرد خلال 24 ساعة" },
+                            { title: "ساعات العمل", value: "الأحد - الخميس: 9ص - 6م", icon: "🕐", sub: "بتوقيت مكة المكرمة" },
+                            { title: "الموقع الرئيسي", value: "الشرق الأوسط - عن بُعد", icon: "📍", sub: "فريق عالمي موزع" },
+                        ].map((info, idx) => (
+                            <div key={idx} className="fb-card p-6 flex items-center gap-6 group hover:border-[#1877F2] transition-colors">
+                                <div className="w-14 h-14 rounded-2xl bg-[#F0F2F5] flex items-center justify-center text-2xl group-hover:bg-[#E7F3FF] group-hover:text-[#1877F2] transition-colors">
+                                    {info.icon}
                                 </div>
-                            )}
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-sm text-white/60 mb-2">الاسم الكامل *</label>
+                                    <h3 className="text-xs font-black text-[#65676B] uppercase tracking-wider mb-1">{info.title}</h3>
+                                    <p className="font-black text-[#050505]">{info.value}</p>
+                                    <p className="text-[10px] font-bold text-[#8A8D91] mt-1">{info.sub}</p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                {/* Contact Form */}
+                <div className="lg:col-span-7">
+                    <div className="fb-card p-10 md:p-12 shadow-2xl shadow-[#1877F2]/5 relative overflow-hidden">
+                        <div className="absolute top-0 right-0 w-32 h-1 bg-[#1877F2]"></div>
+
+                        {sent ? (
+                            <div className="py-20 text-center animate-in zoom-in duration-500">
+                                <div className="text-7xl mb-6">✅</div>
+                                <h2 className="text-2xl font-black mb-4">تم الإرسال بنجاح!</h2>
+                                <p className="text-[#65676B] font-medium">شكراً لتواصلك معنا، سيتواصل معك أحد أعضاء الفريق قريباً.</p>
+                                <button onClick={() => setSent(false)} className="mt-8 text-[#1877F2] font-black text-sm hover:underline">إرسال رسالة أخرى</button>
+                            </div>
+                        ) : (
+                            <form onSubmit={handleSubmit} className="space-y-6">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div>
+                                        <label className="block text-xs font-black text-[#65676B] mb-2 mr-1">الاسم الكامل</label>
+                                        <input
+                                            type="text"
+                                            value={name}
+                                            onChange={(e) => setName(e.target.value)}
+                                            required
+                                            className="fb-input"
+                                            placeholder="احمد محمد"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs font-black text-[#65676B] mb-2 mr-1">البريد الإلكتروني</label>
+                                        <input
+                                            type="email"
+                                            value={email}
+                                            onChange={(e) => setEmail(e.target.value)}
+                                            required
+                                            className="fb-input"
+                                            placeholder="email@example.com"
+                                        />
+                                    </div>
+                                </div>
+                                <div>
+                                    <label className="block text-xs font-black text-[#65676B] mb-2 mr-1">الموضوع</label>
                                     <input
                                         type="text"
-                                        value={name}
-                                        onChange={(e) => setName(e.target.value)}
                                         required
-                                        className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-sm focus:border-[#38bdf8] outline-none text-white placeholder:text-white/30"
-                                        placeholder="اسمك الكامل"
+                                        className="fb-input"
+                                        placeholder="كيف يمكننا مساعدتك؟"
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-sm text-white/60 mb-2">البريد الإلكتروني *</label>
-                                    <input
-                                        type="email"
-                                        value={email}
-                                        onChange={(e) => setEmail(e.target.value)}
+                                    <label className="block text-xs font-black text-[#65676B] mb-2 mr-1">الرسالة بالتفصيل</label>
+                                    <textarea
+                                        value={message}
+                                        onChange={(e) => setMessage(e.target.value)}
                                         required
-                                        className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-sm focus:border-[#38bdf8] outline-none text-white placeholder:text-white/30"
-                                        placeholder="email@example.com"
+                                        rows={6}
+                                        className="fb-input min-h-[150px] resize-none"
+                                        placeholder="اكتب استفسارك هنا..."
                                     />
                                 </div>
-                            </div>
-                            <div>
-                                <label className="block text-sm text-white/60 mb-2">الموضوع *</label>
-                                <input
-                                    type="text"
-                                    value={subject}
-                                    onChange={(e) => setSubject(e.target.value)}
-                                    required
-                                    className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-sm focus:border-[#38bdf8] outline-none text-white placeholder:text-white/30"
-                                    placeholder="موضوع رسالتك"
-                                />
-                            </div>
-                            <div>
-                                <label className="block text-sm text-white/60 mb-2">الرسالة *</label>
-                                <textarea
-                                    value={message}
-                                    onChange={(e) => setMessage(e.target.value)}
-                                    required
-                                    rows={5}
-                                    className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-sm focus:border-[#38bdf8] outline-none text-white placeholder:text-white/30 resize-none"
-                                    placeholder="اكتب رسالتك هنا..."
-                                />
-                            </div>
-                            <button
-                                type="submit"
-                                className="w-full py-3 bg-[#38bdf8] text-[#0f172a] font-bold rounded-xl hover:opacity-90 transition-opacity"
-                            >
-                                إرسال الرسالة
-                            </button>
-                        </form>
+                                <button
+                                    type="submit"
+                                    className="fb-btn-primary w-full py-4 text-sm font-black shadow-xl hover:translate-y-[-2px] transition-all"
+                                >
+                                    إرسال الرسالة الآن 🚀
+                                </button>
+                                <p className="text-[10px] text-center text-[#8A8D91] font-medium">
+                                    بالضغط على إرسال، أنت توافق على معالجة بياناتك وفقاً لسياسة الخصوصية.
+                                </p>
+                            </form>
+                        )}
                     </div>
                 </div>
             </div>
