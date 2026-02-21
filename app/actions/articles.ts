@@ -78,3 +78,68 @@ export async function createArticle(article: Article) {
         return { success: false, error: err.message || "An unexpected error occurred" };
     }
 }
+
+export async function getCategories() {
+    try {
+        if (!isSupabaseConfigured) {
+            return [
+                { name: "ذكاء اصطناعي", count: 24, icon: "🤖" },
+                { name: "برمجة", count: 18, icon: "💻" },
+                { name: "تعلم آلي", count: 15, icon: "🧠" },
+                { name: "أمن سيبراني", count: 12, icon: "🔒" },
+                { name: "ريادة أعمال", count: 9, icon: "🚀" },
+                { name: "إنتاجية", count: 7, icon: "⚡" },
+            ];
+        }
+
+        const { data: categories, error: catError } = await supabase
+            .from("categories")
+            .select("*");
+
+        if (catError) throw catError;
+
+        const { data: articles, error: artError } = await supabase
+            .from("articles")
+            .select("category")
+            .eq("is_published", true);
+
+        if (artError) throw artError;
+
+        return categories.map((cat: any) => ({
+            ...cat,
+            count: articles?.filter((a: any) => a.category === cat.name).length || 0
+        }));
+    } catch (err) {
+        console.error("Error fetching dynamic categories:", err);
+        return [];
+    }
+}
+
+export async function getTrendingArticles() {
+    try {
+        if (!isSupabaseConfigured) {
+            return [
+                { title: "ChatGPT vs Gemini: مقارنة شاملة لعام 2026", views: "12.4K", slug: "ai-revolution-2026" },
+                { title: "أفضل 10 لغات برمجة يجب تعلمها", views: "9.8K", slug: "nextjs-server-components-guide" },
+                { title: "مستقبل الوظائف في عصر الأتمتة", views: "7.2K", slug: "ai-revolution-2026" },
+            ];
+        }
+
+        const { data, error } = await supabase
+            .from("articles")
+            .select("title, views, slug")
+            .eq("is_published", true)
+            .order("views", { ascending: false })
+            .limit(5);
+
+        if (error) throw error;
+        return data.map((item: any) => ({
+            ...item,
+            views: item.views > 1000 ? (item.views / 1000).toFixed(1) + "K" : item.views.toString()
+        }));
+    } catch (err) {
+        console.error("Error fetching trending articles:", err);
+        return [];
+    }
+}
+

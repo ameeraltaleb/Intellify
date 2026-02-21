@@ -1,8 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import AdSlot from "./components/AdSlot";
-import { getArticles } from "./actions/articles";
-import { mockCategories } from "@/lib/mockData";
+import { getArticles, getCategories, getTrendingArticles } from "./actions/articles";
 
 export const metadata: Metadata = {
   title: "Intellify | منصة المعرفة والتكنولوجيا - مقالات ذكاء اصطناعي وتقنية",
@@ -20,7 +19,12 @@ const categoryColors: Record<string, string> = {
 };
 
 export default async function Home() {
-  const articles = await getArticles();
+  const [articles, categories, trending] = await Promise.all([
+    getArticles(),
+    getCategories(),
+    getTrendingArticles()
+  ]);
+
   const featuredArticle = articles[0] || null;
   const latestArticles = articles.slice(1);
 
@@ -35,19 +39,19 @@ export default async function Home() {
           <div className="lg:col-span-8">
             <Link href={`/blog/${featuredArticle.slug}`} className="group block h-full">
               <article className="fb-card h-full overflow-hidden transition-all hover:shadow-lg">
-                <div className="relative h-[300px] md:h-[450px] bg-gradient-to-br from-[#E7F3FF] to-white">
-                  <div className="absolute inset-0 flex items-center justify-center text-[200px] opacity-10 transform group-hover:scale-110 transition-transform duration-1000">🌐</div>
+                <div className="relative h-[300px] md:h-[500px] bg-gradient-to-br from-[#E7F3FF] to-white">
+                  <div className="absolute inset-0 flex items-center justify-center text-[220px] opacity-10 transform group-hover:scale-110 transition-transform duration-1000">🌐</div>
                   <div className="absolute top-6 right-6">
-                    <span className="fb-badge bg-[#1877F2] text-white shadow-md">مقال مميز</span>
+                    <span className="fb-badge bg-[#1877F2] text-white shadow-md">اكتشف الجديد</span>
                   </div>
-                  <div className="absolute bottom-0 inset-x-0 p-8 md:p-12 bg-gradient-to-t from-white via-white/90 to-transparent">
+                  <div className="absolute bottom-0 inset-x-0 p-8 md:p-12 bg-gradient-to-t from-white via-white/95 to-transparent">
                     <span className={`text-xs font-bold px-3 py-1 rounded-md mb-4 inline-block ${categoryColors[featuredArticle.category] || "bg-gray-100 text-gray-700"}`}>
                       {featuredArticle.category}
                     </span>
                     <h2 className="text-3xl md:text-5xl font-black text-[#050505] leading-tight mb-4 group-hover:text-[#1877F2] transition-colors">
                       {featuredArticle.title}
                     </h2>
-                    <p className="text-[#65676B] text-lg mb-6 line-clamp-2">{featuredArticle.excerpt}</p>
+                    <p className="text-[#65676B] text-lg mb-6 line-clamp-2 leading-relaxed">{featuredArticle.excerpt}</p>
                     <div className="flex items-center gap-6 text-sm font-bold text-[#8A8D91]">
                       <span>📅 {featuredArticle.created_at ? new Date(featuredArticle.created_at).toLocaleDateString('ar-SA') : featuredArticle.date}</span>
                       <span>⏱️ {featuredArticle.read_time}</span>
@@ -58,136 +62,127 @@ export default async function Home() {
             </Link>
           </div>
 
-          {/* Side Featured / Ad */}
+          {/* Email Newsletter Card */}
           <div className="lg:col-span-4 flex flex-col gap-6">
-            <div className="fb-card p-8 flex-1 flex flex-col justify-center items-center text-center">
-              <div className="w-16 h-16 bg-[#E7F3FF] text-[#1877F2] rounded-full flex items-center justify-center text-3xl mb-6 shadow-inner">📬</div>
-              <h3 className="text-2xl font-black mb-3">النشرة البريدية</h3>
-              <p className="text-[#65676B] text-sm mb-8 leading-relaxed">انضم إلى أكثر من ٥٠ ألف متابع مهتم بالتقنية والذكاء الاصطناعي.</p>
+            <div className="fb-card p-10 flex-1 flex flex-col justify-center items-center text-center bg-gradient-to-b from-[#E7F3FF]/50 to-white">
+              <div className="w-20 h-20 bg-white text-[#1877F2] rounded-3xl flex items-center justify-center text-4xl mb-6 shadow-sm border border-[#E7F3FF]">📩</div>
+              <h3 className="text-2xl font-black mb-3">اشترك في النشرة</h3>
+              <p className="text-[#65676B] text-sm mb-8 leading-relaxed font-medium">احصل على أفضل المقالات والدروس التقنية مباشرة في بريدك.</p>
               <div className="w-full space-y-3">
-                <input type="email" placeholder="بريدك الإلكتروني" className="fb-input bg-[#F0F2F5] border border-[#CED0D4] focus:border-[#1877F2]" />
-                <button className="fb-btn-primary w-full py-3.5 shadow-md">اشترك الآن</button>
+                <input type="email" placeholder="بريدك الإلكتروني" className="fb-input bg-white border border-[#CED0D4] focus:border-[#1877F2] py-4" />
+                <button className="fb-btn-primary w-full py-4 shadow-xl hover:translate-y-[-2px] transition-transform">انضم الآن</button>
               </div>
+              <p className="text-[10px] text-[#8A8D91] mt-4">لا نقوم بإرسال رسائل مزعجة، يمكنك إلغاء الاشتراك في أي وقت.</p>
             </div>
-            <AdSlot format="rectangle" />
           </div>
         </section>
       )}
 
-      {/* Middle Horizontal Ad */}
-      <AdSlot className="mb-12" label="المساحة الإعلانية الأولى" format="horizontal" />
-
       {/* Main Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
         {/* Left: Article Feed */}
-        <main className="lg:col-span-8 lg:border-l lg:border-[#CED0D4] lg:pl-10">
+        <main className="lg:col-span-8">
           <div className="flex items-center justify-between mb-10 pb-4 border-b border-[#CED0D4]">
             <h2 className="text-2xl font-black text-[#050505] flex items-center gap-4">
               <span className="w-3 h-8 bg-[#1877F2] rounded-full"></span>
-              أحدث المقالات
+              أحدث ما نشرنا
             </h2>
-            <Link href="/blog" className="text-[#1877F2] font-bold text-sm hover:underline">مشاهدة الكل</Link>
+            <Link href="/blog" className="text-[#1877F2] font-black text-sm hover:underline">المزيد من المقالات ←</Link>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 gap-10">
             {latestArticles.map((article, idx) => (
               <div key={article.slug}>
-                <Link href={`/blog/${article.slug}`} className="group block h-full">
-                  <article className="fb-card h-full transition-all duration-300 hover:shadow-lg border-[#CED0D4] flex flex-col">
-                    <div className="h-48 bg-[#F0F2F5] flex items-center justify-center text-6xl group-hover:bg-[#E7F3FF] transition-colors shrink-0">
-                      {article.category === "برمجة" ? "💻" : article.category === "تعلم آلي" ? "🧠" : article.category === "إنتاجية" ? "⚡" : article.category === "أمن سيبراني" ? "🔒" : article.category === "ريادة أعمال" ? "🚀" : "📝"}
+                <Link href={`/blog/${article.slug}`} className="group block">
+                  <article className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center bg-white p-4 rounded-3xl border border-transparent hover:border-[#CED0D4] hover:bg-[#F0F2F5]/30 transition-all duration-500">
+                    <div className="md:col-span-4 h-56 bg-[#F0F2F5] rounded-2xl flex items-center justify-center text-7xl group-hover:scale-[1.03] transition-transform duration-700">
+                      {article.category === "برمجة" ? "💻" : article.category === "ذكاء اصطناعي" ? "🤖" : article.category === "تعلم آلي" ? "🧠" : "📝"}
                     </div>
-                    <div className="p-6 flex flex-col flex-1">
+                    <div className="md:col-span-8 flex flex-col p-2">
                       <div className="flex items-center gap-3 mb-4">
-                        <span className={`text-[10px] font-black px-2.5 py-1 rounded-md ${categoryColors[article.category] || "bg-gray-100 text-gray-600"}`}>
+                        <span className={`text-[10px] font-black px-3 py-1.5 rounded-lg ${categoryColors[article.category] || "bg-gray-100 text-gray-600"}`}>
                           {article.category}
                         </span>
-                        <span className="text-[11px] font-bold text-[#8A8D91]">
-                          {article.created_at ? new Date(article.created_at).toLocaleDateString('ar-SA') : article.date}
+                        <span className="text-xs font-bold text-[#8A8D91]">
+                          📅 {article.created_at ? new Date(article.created_at).toLocaleDateString('ar-SA') : article.date}
                         </span>
                       </div>
-                      <h3 className="font-black text-xl text-[#050505] mb-4 group-hover:text-[#1877F2] transition-colors leading-snug">
+                      <h3 className="font-black text-2xl text-[#050505] mb-4 group-hover:text-[#1877F2] transition-colors leading-snug">
                         {article.title}
                       </h3>
-                      <p className="text-[#65676B] text-[15px] line-clamp-3 mb-6 leading-relaxed flex-1">
+                      <p className="text-[#65676B] text-[16px] line-clamp-2 mb-6 leading-relaxed font-medium">
                         {article.excerpt}
                       </p>
-                      <div className="flex items-center justify-between mt-auto pt-4 border-t border-[#F0F2F5]">
-                        <span className="text-[11px] font-bold text-[#8A8D91]">⏱️ {article.read_time}</span>
-                        <span className="text-[#1877F2] text-xs font-bold group-hover:translate-x-[-4px] transition-transform">اقرأ المزيد ←</span>
+                      <div className="flex items-center gap-6 text-xs font-bold text-[#8A8D91]">
+                        <span className="flex items-center gap-2">⏱️ {article.read_time}</span>
+                        <span className="text-[#1877F2] font-black group-hover:translate-x-[-5px] transition-transform flex items-center gap-1">استكمل القراءة <span className="text-lg">←</span></span>
                       </div>
                     </div>
                   </article>
                 </Link>
-                {/* Insert Ad on mobile */}
-                {idx === 1 && <div className="mt-8 md:hidden"><AdSlot format="rectangle" /></div>}
+                {/* Mid-feed Ad */}
+                {idx === 1 && <div className="mt-10"><AdSlot format="horizontal" /></div>}
               </div>
             ))}
           </div>
 
-          <div className="mt-12 text-center">
-            <button className="fb-btn-secondary px-16 py-4 border border-[#CED0D4] font-black">تحميل المزيد من المقالات</button>
+          <div className="mt-16 text-center">
+            <button className="fb-btn-secondary px-20 py-4 border-2 border-[#CED0D4] font-black text-sm rounded-full hover:bg-[#050505] hover:text-white transition-all">تحميل المزيد من القصص</button>
           </div>
         </main>
 
         {/* Right: Sidebar */}
-        <aside className="lg:col-span-4 space-y-10">
-          <AdSlot format="rectangle" />
-
-          {/* Categories */}
+        <aside className="lg:col-span-4 space-y-12">
+          {/* Categories - Now Dynamic */}
           <div className="fb-card p-8 border-[#CED0D4]">
             <h3 className="font-black text-xl text-[#050505] mb-8 flex items-center gap-3">
-              <span className="w-1.5 h-6 bg-[#42B72A] rounded-full"></span>
-              التصنيفات
+              <span className="w-1.5 h-7 bg-[#42B72A] rounded-full"></span>
+              استكشف المواضيع
             </h3>
-            <div className="grid grid-cols-1 gap-3">
-              {mockCategories.map((cat) => (
+            <div className="grid grid-cols-1 gap-2">
+              {categories.map((cat: any) => (
                 <Link
                   key={cat.name}
                   href={`/blog?category=${cat.name}`}
-                  className="flex items-center justify-between p-4 rounded-xl hover:bg-[#F0F2F5] transition-all group"
+                  className="flex items-center justify-between p-4 rounded-2xl hover:bg-[#F0F2F5] transition-all group border border-transparent hover:border-[#CED0D4]/30"
                 >
                   <span className="flex items-center gap-4 text-sm font-bold text-[#050505] group-hover:text-[#1877F2]">
-                    <span className="w-10 h-10 rounded-full bg-[#E7F3FF] text-[#1877F2] flex items-center justify-center text-xl shadow-sm">{cat.icon}</span>
+                    <span className="w-10 h-10 rounded-xl bg-[#F0F2F5] text-[#1877F2] flex items-center justify-center text-xl shadow-inner group-hover:bg-[#E7F3FF] transition-colors">{cat.icon || "📁"}</span>
                     {cat.name}
                   </span>
-                  <span className="text-xs font-black text-[#65676B] bg-[#F0F2F5] px-3 py-1.5 rounded-lg group-hover:bg-[#1877F2] group-hover:text-white transition-colors">
-                    {cat.count}
+                  <span className="text-[10px] font-black text-[#65676B] bg-[#EDF0F3] px-3 py-1 rounded-full group-hover:bg-[#1877F2] group-hover:text-white transition-colors">
+                    {cat.count} مقال
                   </span>
                 </Link>
               ))}
             </div>
           </div>
 
-          <AdSlot format="rectangle" label="مساحة إعلانية" />
+          <AdSlot format="rectangle" />
 
-          {/* Popular Articles */}
+          {/* Popular Articles - Now Dynamic */}
           <div className="fb-card p-8 border-[#CED0D4]">
             <h3 className="font-black text-xl text-[#050505] mb-8 flex items-center gap-3">
-              <span className="w-1.5 h-6 bg-[#FA3E3E] rounded-full"></span>
-              المقالات الأكثر رواجاً
+              <span className="w-1.5 h-7 bg-[#FA3E3E] rounded-full"></span>
+              الأكثر تفاعلاً هذا الأسبوع
             </h3>
-            <div className="space-y-6">
-              {[
-                { title: "ChatGPT vs Gemini: مقارنة شاملة لعام 2026", views: "12.4K" },
-                { title: "أفضل 10 لغات برمجة يجب تعلمها", views: "9.8K" },
-                { title: "مستقبل الوظائف في عصر الأتمتة", views: "7.2K" },
-                { title: "دليل بناء موقع إلكتروني احترافي", views: "5.6K" },
-              ].map((item, idx) => (
+            <div className="space-y-8">
+              {trending.map((item: any, idx: number) => (
                 <Link
                   key={idx}
-                  href="/blog"
+                  href={`/blog/${item.slug}`}
                   className="flex items-start gap-5 group"
                 >
-                  <span className="text-4xl font-black text-[#E4E6EB] group-hover:text-[#1877F2] transition-colors leading-none">
+                  <div className="text-4xl font-black text-[#F0F2F5] group-hover:text-[#1877F2] transition-colors leading-none italic">
                     {idx + 1}
-                  </span>
+                  </div>
                   <div>
-                    <p className="text-sm font-black text-[#050505] leading-snug group-hover:text-[#1877F2] transition-colors mb-2">
+                    <h4 className="text-sm font-black text-[#050505] leading-[1.6] group-hover:text-[#1877F2] transition-colors mb-2">
                       {item.title}
-                    </p>
-                    <p className="text-[11px] font-bold text-[#8A8D91]">
-                      👁️ {item.views} مشاهدة
+                    </h4>
+                    <p className="text-[10px] font-bold text-[#8A8D91] flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 bg-[#42B72A] rounded-full"></span>
+                      {item.views} قراءة نشطة
                     </p>
                   </div>
                 </Link>
@@ -195,15 +190,20 @@ export default async function Home() {
             </div>
           </div>
 
-          {/* Sticky Ad */}
-          <div className="sticky top-24">
-            <AdSlot format="rectangle" label="إعلان ممول" />
+          {/* Sticky Ad / Promo */}
+          <div className="sticky top-28">
+            <div className="rounded-[40px] bg-[#050505] p-10 text-center text-white overflow-hidden relative border-4 border-[#1877F2]">
+              <div className="absolute -top-10 -right-10 w-40 h-40 bg-[#1877F2] rounded-full blur-3xl opacity-20"></div>
+              <h4 className="text-2xl font-black mb-4 relative z-10">كن جزءاً من المستقبل</h4>
+              <p className="text-white/60 text-sm mb-8 relative z-10 leading-relaxed">انضم إلى مجتمع Intellify واحصل على تحديثات حصرية يومياً.</p>
+              <button className="w-full py-4 bg-white text-[#050505] rounded-2xl font-black text-sm hover:bg-[#1877F2] hover:text-white transition-all shadow-2xl relative z-10">انضم مجاناً</button>
+            </div>
           </div>
         </aside>
       </div>
 
-      {/* Bottom Ad */}
-      <AdSlot className="mt-20" format="horizontal" />
+      {/* Footer Banner Ad */}
+      <AdSlot className="mt-24" format="horizontal" />
     </div>
   );
 }
