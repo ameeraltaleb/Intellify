@@ -37,6 +37,7 @@ export async function POST(request: Request) {
         7. قم بوضع عبارة "بقلم كاتب الذكاء الاصطناعي في Intellify" في نهاية المقال.
 
         ملاحظة: لا تضع أي ملاحظات جانبية أو كود تفاعلي، فقط نص المقال بتنسيق Markdown.
+        // Timestamp to force unique session: ${Date.now()}
         `;
 
         const result = await model.generateContent(aiPrompt);
