@@ -50,19 +50,28 @@ export default function GenerateArticle() {
         if (!generatedContent) return;
         setIsSaving(true);
         try {
-            const slug = prompt.toLowerCase().replace(/ /g, "-").replace(/[^\w\u0621-\u064A-]+/g, "");
-            await createArticle({
+            const slug = prompt.toLowerCase()
+                .trim()
+                .replace(/\s+/g, "-")
+                .replace(/[^\w\u0621-\u064A-]+/g, "");
+
+            const result = await createArticle({
                 title: prompt,
                 slug,
                 excerpt: generatedContent.slice(0, 150) + "...",
                 content: generatedContent.split("\n\n"),
-                category: "ذكاء اصطناعي", // Default for now
+                category: "ذكاء اصطناعي",
                 read_time: "١٠ دقائق",
                 tags: ["AI", "Generated"],
             });
-            alert("تم حفظ المقال بنجاح في قاعدة البيانات!");
+
+            if (result.success) {
+                alert("🎉 تم نشر المقال بنجاح! يمكنك مشاهدته الآن على الصفحة الرئيسية.");
+            } else {
+                alert("⚠️ فشل النشر: " + result.error);
+            }
         } catch (err: any) {
-            alert("فشل الحفظ: " + err.message);
+            alert("❌ خطأ غير متوقع: " + err.message);
         } finally {
             setIsSaving(false);
         }
