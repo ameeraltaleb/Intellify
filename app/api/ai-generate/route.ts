@@ -1,58 +1,64 @@
 import { NextResponse } from "next/server";
+import { GoogleGenerativeAI } from "@google/generative-ai";
+
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
 
 export async function POST(request: Request) {
     try {
         const body = await request.json();
         const { prompt, tone, length } = body;
 
-        // Simulate AI generation delay
-        await new Promise((resolve) => setTimeout(resolve, 1500));
+        if (!process.env.GEMINI_API_KEY) {
+            return NextResponse.json(
+                { success: false, error: "GEMINI_API_KEY is not configured" },
+                { status: 500 }
+            );
+        }
 
-        const toneMap: Record<string, string> = {
-            "احترافية": "بنبرة احترافية وموثوقة",
-            "إبداعية": "بأسلوب إبداعي مشوق",
-            "تعليمية": "بطريقة تعليمية مبسطة",
-            "تقنية": "بدقة تقنية عالية",
+        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+        const lengthMap: Record<string, string> = {
+            "قصير (٥٠٠ كلمة)": "حوالي 500 كلمة",
+            "متوسط (١٠٠٠ كلمة)": "حوالي 1000 كلمة",
+            "طويل (٢٠٠٠+ كلمة)": "أكثر من 1500 كلمة مع تفاصيل عميقة",
         };
 
-        const toneText = toneMap[tone] || "بنبرة احترافية";
+        const aiPrompt = `
+        أنت كاتب مقالات محترف ومختص في التقنية والذكاء الاصطناعي لموقع "Intellify".
+        قم بكتابة مقال كامل وحصري باللغة العربية الفصحى حول الموضوع التالي: "${prompt}".
+        
+        المتطلبات:
+        1. نغمة الكتابة: ${tone}.
+        2. الطول المطلوب: ${lengthMap[length] || "حوالي 1000 كلمة"}.
+        3. التنسيق: استخدم Markdown. ابدأ بالعنوان الرئيسي (H1)، ثم مقدمة جذابة، ثم عناوين فرعية (H2)، ثم فقرات غنية بالمعلومات، ونقاط توضيحية، ثم خاتمة قوية.
+        4. الأسلوب: اجعل المقال مفيداً جداً للقارئ العربي، بأسلوب عصري يشبه مقالات المواقع التقنية الكبرى.
+        5. تجنب الحشو والكلمات المكررة.
+        6. في نهاية المقال، اقترح 5 وسوم (Tags) ذات صلة بالموضوع.
+        7. قم بوضع عبارة "بقلم كاتب الذكاء الاصطناعي في Intellify" في نهاية المقال.
 
-        const content = `# ${prompt}
+        ملاحظة: لا تضع أي ملاحظات جانبية أو كود تفاعلي، فقط نص المقال بتنسيق Markdown.
+        `;
 
-## مقدمة
-في عصر التحول الرقمي المتسارع، يبرز موضوع "${prompt}" كأحد أهم المواضيع التي تستحق الدراسة والتحليل المعمق. كُتب هذا المقال ${toneText} ليقدم رؤية شاملة حول هذا الموضوع الحيوي.
+        const result = await model.generateContent(aiPrompt);
+        const response = await result.response;
+        const content = response.text();
 
-## أهمية الموضوع
-شهد العالم في السنوات الأخيرة تطورات جذرية في مجال التكنولوجيا والذكاء الاصطناعي. وقد أصبح فهم "${prompt}" ضرورة حتمية لكل من يرغب في مواكبة هذا التطور المتسارع.
-
-## التفاصيل والتحليل
-عند النظر إلى الجوانب المختلفة لهذا الموضوع، نجد أن هناك عدة محاور رئيسية:
-
-1. **البعد التقني**: التطورات التكنولوجية المرتبطة بهذا المجال تتسارع بشكل غير مسبوق.
-2. **البعد الاقتصادي**: التأثير على الأسواق والصناعات يتزايد يوماً بعد يوم.
-3. **البعد الاجتماعي**: التحولات في طريقة تفاعل الناس مع هذه التقنيات.
-
-## التوقعات المستقبلية
-من المتوقع أن يشهد هذا المجال نمواً كبيراً خلال السنوات القادمة، مع تزايد الاعتماد على الحلول الذكية والأتمتة.
-
-## الخلاصة
-يُعد موضوع "${prompt}" من المواضيع المحورية التي ستشكل مستقبل العالم الرقمي. ننصحك بمتابعة Intellify للحصول على آخر المستجدات.
-
----
-*تم توليد هذا المقال بواسطة Intellify AI بتاريخ ${new Date().toLocaleDateString("ar-SA")}*`;
+        // Basic SEO scoring simulation (can be improved)
+        const seoScore = Math.floor(Math.random() * (98 - 85 + 1)) + 85;
 
         return NextResponse.json({
             success: true,
-            content,
+            content: content,
             metadata: {
                 wordCount: content.split(/\s+/).length,
                 tone,
                 length,
-                keywords: [prompt, "ذكاء اصطناعي", "تكنولوجيا", "مستقبل"],
+                seoScore: seoScore
             },
         });
     } catch (error: unknown) {
-        const message = error instanceof Error ? error.message : "Unknown error";
+        console.error("Gemini Generation Error:", error);
+        const message = error instanceof Error ? error.message : "Unknown error occurred during generation";
         return NextResponse.json(
             { success: false, error: message },
             { status: 500 }
