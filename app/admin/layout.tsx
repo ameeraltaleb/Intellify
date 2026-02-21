@@ -34,7 +34,8 @@ export default function AdminLayout({
                     {[
                         { href: "/admin", label: "الإحصائيات", icon: "📊" },
                         { href: "/admin/articles", label: "إدارة المقالات", icon: "📁" },
-                        { href: "/admin/generate-article", label: "توليد مقال", icon: "✨" },
+                        { href: "/admin/editor", label: "المحرر الذكي", icon: "✍️" },
+                        { href: "/admin/generate-article", label: "التوليد التلقائي", icon: "✨" },
                         { href: "/admin/scheduler", label: "جدولة المحتوى", icon: "⏳" },
                         { href: "/admin/settings", label: "الإعدادات", icon: "⚙️" },
                     ].map((item) => {
@@ -79,8 +80,9 @@ export default function AdminLayout({
                         <h2 className="text-3xl font-black text-[#050505]">
                             {pathname === "/admin" ? "لوحة التحكم" :
                                 pathname === "/admin/articles" ? "إدارة المقالات" :
-                                    pathname === "/admin/generate-article" ? "توليد محتوى جديد" :
-                                        pathname === "/admin/scheduler" ? "الجدولة الذكية" : "الإعدادات"}
+                                    pathname === "/admin/editor" ? "المحرر الذكي" :
+                                        pathname === "/admin/generate-article" ? "التوليد التلقائي" :
+                                            pathname === "/admin/scheduler" ? "الجدولة الذكية" : "الإعدادات"}
                         </h2>
                         <p className="text-[#65676B] text-sm mt-1">أهلاً بك مجدداً في نظام إدارة المحتوى</p>
                     </div>
